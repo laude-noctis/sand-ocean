@@ -15,10 +15,10 @@ const userSchema = new Schema(
 
         },
         thoughts: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Thought'
+            type: Schema.Types.ObjectId, ref: 'Thought'
         },
         friends: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'User'
+            type: Schema.Types.ObjectId, ref: 'User'
         },
     },
     {
@@ -30,8 +30,8 @@ const userSchema = new Schema(
 );
 
 userSchema
-    .virtual('friendCount')
-    .get(function () {
+.virtual('friendCount')
+.get(function () {
         return `${this.username}`
     });
 

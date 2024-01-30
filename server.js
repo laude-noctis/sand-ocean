@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(routes);
 
-db.once('opn', () => {
+db.once('open', () => {
     app.listen(PORT, () => {
         console.log(`API server is running on port ${PORT}`);
     });

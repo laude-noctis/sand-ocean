@@ -6,15 +6,9 @@ const router = require('express').Router();
 router.get('/', async (req, res) => {
   console.log("Getting all users");
   try {
-    const allUsers = await User.find();
-    const numberOfUsers = await User.aggregate().count('userCount');
+    const allUsers = await User.find({});
     
-    const usersObject = {
-      allUsers,
-      users: numberOfUsers[0].userCount
-    }
-    
-    res.json(usersObject);
+    res.json(allUsers);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -34,20 +28,51 @@ router.get('/:userId', async (req, res) => {
 
     res.json(user)
   } catch (err) {
-    console.log(err)
+    console.error(err)
     res.status(500).json(err)
   };
 });
 
-// create an user
+// create a user
 router.post('/', async (req, res) => {
-  console.log("Creating an user");
+  console.log("Creating a user");
   try {
       const newUser = await User.create(req.body)
       res.json(newUser)
   } catch (err) {
-    console.log(err)
-    res.json(500).json(err)
+    console.error(err)
+    res.status(500).json(err)
   }
 })
+
+// update a user
+router.put('/', async (req, res) => {
+  console.log("Updateing a user")
+  try {
+    const updateUser = await User.updateOne({ where: req.params.userId }, req.body)
+
+    res.json(updateUser)
+  } catch (err) {
+    console.errer(err)
+    res.status(500).json(err)
+  }
+})
+
+// delete a user
+router.delete('/:userId', async (req, res) => {
+  console.log("Deleting a user")
+  try {
+    const userToDelete = await User.findOneAndDelete({ _id: req.params.userId });
+
+    if (!userToDelete) {
+      res.status(404).json({ message: "User does not exist"});
+    }
+
+    res.json({ message: 'User successfully deleted' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;

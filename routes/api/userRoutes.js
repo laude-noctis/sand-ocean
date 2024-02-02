@@ -47,10 +47,10 @@ router.post('/', async (req, res) => {
 })
 
 // update a user
-router.put('/', async (req, res) => {
+router.put('/:userId', async (req, res) => {
   console.log("Updating a user")
   try {
-    const updateUser = await User.updateOne({ where: req.params.userId }, req.body)
+    const updateUser = await User.updateOne({ _id: req.params.userId }, req.body)
 
     res.json(updateUser)
   } catch (err) {

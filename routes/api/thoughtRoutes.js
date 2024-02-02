@@ -22,7 +22,6 @@ router.get('/:thoughtId', async (req, res) => {
     try {
         const oneThought = await Thought.findOne({ _id: req.params.thoughtId })
         .populate('reactions', '-__v')
-        .populate('username', 'username');
 
         if (!oneThought) {
             return res.status(404).json({ message: "No thoughts here" })
@@ -56,6 +55,36 @@ router.post('/', async (req, res) => {
         res.status(500).json(err)
     }
 });
+
+// Updating a Thought
+router.put('/:thoughtId', async (req, res) => {
+    console.log("Updating a thought")
+    try {
+        const updateThought = await Thought.updateOne({ _id: req.params.thoughtId }, req.body)
+
+        res.json(updateThought)
+    } catch (err) {
+        console.error(err)
+        res.status(500).json(err)
+    }
+})
+
+// Deleting a Thought
+router.delete('/:thoughtId', async (req, res) => {
+    console.log("Deleting a thought")
+    try {
+        const byeThought = await Thought.deleteOne({ _id: req.params.thoughtId })
+
+        if (!byeThought) {
+            res.status(404).json({ message: "thought never found" });
+        }
+
+        res.json({ message: "Thought successfully forgotten!"})
+    } catch (err) {
+        console.error(err)
+        res.status(500).json(err)
+    }
+})
 
 // router.post('/:thoughtId/reactions', async (req, res) => {
 //     console.log('Creating a reaction')

@@ -6,8 +6,9 @@ const router = require('express').Router();
 router.get('/', async (req, res) => {
   console.log("Getting all users");
   try {
-    const allUsers = await User.find({});
-    
+    const allUsers = await User.find({})
+      .populate({ path: "friends", select: '-__v' });
+
     res.json(allUsers);
   } catch (error) {
     console.error(error);
@@ -20,17 +21,17 @@ router.get('/:userId', async (req, res) => {
   console.log("Getting one user");
   try {
     const user = await User.findOne({ _id: req.params.userId })
-    .select('-__v');
+      .populate({ path: "friends", select: '-__v' });
 
     if (!user) {
-      return res.status(404).json({ message: 'User does not exist'})
+      return res.status(404).json({ message: 'User does not exist' })
     }
 
     res.json(user)
   } catch (err) {
     console.error(err)
     res.status(500).json(err)
-  };
+  }
 });
 
 // create a user
@@ -47,7 +48,7 @@ router.post('/', async (req, res) => {
 
 // update a user
 router.put('/', async (req, res) => {
-  console.log("Updateing a user")
+  console.log("Updating a user")
   try {
     const updateUser = await User.updateOne({ where: req.params.userId }, req.body)
 
@@ -74,5 +75,26 @@ router.delete('/:userId', async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+// adding a friend
+router.post('/:userId/friends/:friendId', async (req, res) => {
+  console.log("Adding a friend")
+  try {
+    const addFriend = await User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.params.friendId } },
+      { new: true },
+    )
+
+    if (!addFriend) {
+      res.status(404).json({ message: 'Friend is no where to be seen' })
+    }
+
+    res.json('New friend!! 🎉')
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
+})
 
 module.exports = router;

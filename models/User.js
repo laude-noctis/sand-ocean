@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema(
@@ -14,11 +15,11 @@ const userSchema = new Schema(
             unique: true,
             match: /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
         },
-        thoughts: {
-            type: Schema.Types.ObjectId, ref: 'Thought'
-        },
         friends: {
             type: Schema.Types.ObjectId, ref: 'User'
+        },
+        thoughts: {
+            type: Schema.Types.ObjectId, ref: 'Thought'
         },
     },
     {
@@ -29,13 +30,12 @@ const userSchema = new Schema(
     }
 );
 
-// needs rework
 userSchema
 .virtual('friendCount')
 .get(function () {
-        return `${this.username}`
+        return this.friends.length;
     });
 
-const User = model('user', userSchema);
+const User = mongoose.model('user', userSchema);
 
 module.exports = User;

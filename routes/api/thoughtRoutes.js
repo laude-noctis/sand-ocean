@@ -86,15 +86,27 @@ router.delete('/:thoughtId', async (req, res) => {
     }
 })
 
-// router.post('/:thoughtId/reactions', async (req, res) => {
-//     console.log('Creating a reaction')
-//     try {
-//         const createReaction = await Thought.create(req.body)
-//         res.json(createReaction)
-//     } catch (err) {
-//         console.error(err)
-//         res.status(500).json(err)
-//     }
-// });
+// Creating a reaction
+router.post('/:thoughtId/reactions', async (req, res) => {
+    console.log('Creating a reaction')
+    try {
+        const thought = await Thought.findOne({ _id: req.params.thoughtId });
+    
+        if (!thought) {
+          return res.status(404).json({ message: 'Thought not found' });
+        }
+    
+        thought.reactions.push({
+          reactionBody: req.body.reactionBody,
+          username: req.body.username
+        });
+    
+        await thought.save();
+        res.json({ message: 'Reaction created successfully', thought });
+    } catch (err) {
+        console.error(err)
+        res.status(500).json(err)
+    }
+});
 
 module.exports = router

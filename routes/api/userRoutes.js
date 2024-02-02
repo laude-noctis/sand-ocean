@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongoose').Types;
-const { User } = require('../../models');
+const { User, Thought } = require('../../models');
 const router = require('express').Router();
 
 // get all users
@@ -69,6 +69,7 @@ router.delete('/:userId', async (req, res) => {
       res.status(404).json({ message: "User does not exist"});
     }
 
+    await Thought.deleteMany({ _id: { $in: userToDelete.thoughts } });
     res.json({ message: 'User successfully deleted' });
   } catch (err) {
     console.error(err);

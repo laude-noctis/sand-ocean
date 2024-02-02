@@ -21,7 +21,8 @@ router.get('/:thoughtId', async (req, res) => {
     console.log('Getting one thought')
     try {
         const oneThought = await Thought.findOne({ _id: req.params.thoughtId })
-            .populate({ path: "reactions", select: "-__v" });
+        .populate('reactions', '-__v')
+        .populate('username', 'username');
 
         if (!oneThought) {
             return res.status(404).json({ message: "No thoughts here" })

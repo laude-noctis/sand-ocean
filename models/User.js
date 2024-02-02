@@ -7,7 +7,7 @@ const userSchema = new Schema(
             type: String,
             unique: true,
             required: true,
-            trimmed: true
+            trim: true
         },
         email: {
             type: String,
@@ -15,12 +15,12 @@ const userSchema = new Schema(
             unique: true,
             match: /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
         },
-        friends: {
+        friends: [{
             type: Schema.Types.ObjectId, ref: 'User'
-        },
-        thoughts: {
+        }],
+        thoughts: [{
             type: Schema.Types.ObjectId, ref: 'Thought'
-        },
+        }],
     },
     {
         toJSON: {

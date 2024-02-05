@@ -113,21 +113,21 @@ router.post('/:thoughtId/reactions', async (req, res) => {
 router.delete('/:thoughtId/reactions/:reactionId', async (req, res) => {
     console.log("Deleting a reaction");
     try {
-      const reaction = await Thought.findOneAndUpdate(
-        { _id: req.params.thoughtId },
-        { $pull: { reactions: { _id: req.params.reactionId } } },
-        { new: true }
-      );
-  
-      if (!reaction) {
-        return res.status(404).json({ message: 'Reaction not found' });
-      }
-  
-      res.json({ message: "Reaction removed!"});
+        const reaction = await Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId },
+            { $pull: { reactions: { _id: req.params.reactionId } } },
+            { new: true }
+        );
+
+        if (!reaction) {
+            return res.status(404).json({ message: 'Reaction not found' });
+        }
+
+        res.json({ message: "Reaction removed!" });
     } catch (err) {
-      console.error(err);
-      res.status(500).json(err);
+        console.error(err);
+        res.status(500).json(err);
     }
-  });
+});
 
 module.exports = router

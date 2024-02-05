@@ -1,4 +1,4 @@
-function formatDate() {
+function formatDate(date) {
     const options = {
       month: 'long',
       day: 'numeric',
